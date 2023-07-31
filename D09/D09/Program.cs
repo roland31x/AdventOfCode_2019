@@ -57,7 +57,6 @@
                 }
                 return true;
             }          
-            //Console.WriteLine(outputs.Last());
         }
         public long GetMode(long mode, long pos)
         {
