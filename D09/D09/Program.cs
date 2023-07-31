@@ -23,13 +23,14 @@
         public long[] program;
         long driver = 0;
         long relativebase = 0;
+        int memsize = 3000; // please adjust this 
         public List<long> outputs = new List<long>();
         public Queue<long> inputs = new Queue<long>();
         int definput = 0;
         public IntCode(string ops)
         {
             string[] tokens = ops.Split(',');
-            program = new long[3000];
+            program = new long[memsize];
             for (int i = 0; i < tokens.Length; i++)
             {
                 program[i] = long.Parse(tokens[i]);
