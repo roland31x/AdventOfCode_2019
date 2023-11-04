@@ -88,34 +88,6 @@ namespace D14
             oresrecovered = inventory[Chemical.GetChemical("ORE")];
             inventory[Chemical.GetChemical("ORE")] = 0;
         }
-        static bool TryCraft(Chemical tocraft, Dictionary<Chemical, long> inventory, ref long ores, long amountneeded)
-        {
-            if (tocraft == Chemical.GetChemical("ORE"))
-            {
-                if(ores >= 1_000_000_000_000)
-                    return false;
-                if (!inventory.ContainsKey(tocraft))
-                    inventory.Add(tocraft, 1);
-                else
-                    inventory[tocraft] += amountneeded;
-                ores += amountneeded;
-            }
-
-            for (int i = 0; i < tocraft.components.Count; i++)
-            {
-                if (!inventory.ContainsKey(tocraft.components[i]))
-                    inventory.Add(tocraft.components[i], 0);
-                while (inventory[tocraft.components[i]] < tocraft.amount[i])
-                    if(!TryCraft(tocraft.components[i], inventory, ref ores, tocraft.amount[i]))
-                        return false;
-                inventory[tocraft.components[i]] -= tocraft.amount[i];
-            }
-
-            if (!inventory.ContainsKey(tocraft))
-                inventory.Add(tocraft, 0);
-            inventory[tocraft] += tocraft.TotalCrafted;
-            return true;
-        }
         static void Craft(Chemical tocraft, Dictionary<Chemical,long> inventory, ref long ores) 
         {
             if(tocraft == Chemical.GetChemical("ORE"))
