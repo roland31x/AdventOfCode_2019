@@ -112,18 +112,6 @@ namespace D14
                 inventory.Add(tocraft, 0);
             inventory[tocraft] += tocraft.TotalCrafted;
         }
-        static void DFS(Chemical current, Dictionary<Chemical,long> totals, long multiplieramount)
-        {
-            for (int i = 0; i < current.components.Count; i++)
-            {
-                if (current.components[i] == Chemical.GetChemical("ORE"))
-                    continue;
-                if (!totals.ContainsKey(current.components[i]))
-                    totals.Add(current.components[i], 0);
-                totals[current.components[i]] += current.amount[i] * multiplieramount;
-                DFS(current.components[i], totals, current.amount[i] * multiplieramount);
-            }
-        }
     }
     public class Chemical
     {
