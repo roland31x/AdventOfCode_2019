@@ -13,12 +13,14 @@ namespace D25
             IntCode prog = new IntCode(line);
             IntCode clone = prog.Clone();
             prog.Run();
-
-                //List<string> lines = prog.OutputASCII();
-                //foreach (string l in lines)
-                //    Console.WriteLine(l);
-                //prog.InputASCII(Console.ReadLine());
-                //prog.Run();
+            //while (true)
+            //{
+            //    List<string> lines = prog.OutputASCII();
+            //    foreach (string l in lines)
+            //        Console.WriteLine(l);
+            //    prog.InputASCII(Console.ReadLine());
+            //    prog.Run();
+            //}
             DiscoverMap(prog);
             PickUpAllItems(ref prog);
             Node securitycp = nodes.First(x => x.IsSecurityCheckpoint);
@@ -37,22 +39,9 @@ namespace D25
             else if (outs.Contains("- west") && current.W == null)
                 command = "west";
 
-            List<string> dropped = new List<string>();
-            //while (outs.Contains("Command?"))
-            //{
-            //    prog.InputASCII(command);
-            //    prog.Run();
-            //    outs = prog.OutputASCII();
-            //    for(int i = 0; i < currentitems.Count; i++)
-            //    {
-            //        dropped.Add(currentitems.First());
-            //        prog.InputASCII("drop " + currentitems.First());
-            //        prog.Run();
-            //        prog.OutputASCII();
-            //    }
-            //}
+            List<string> result = new List<string>();
             bool done = false;
-            ItemCombine(currentitems, dropped,0, prog, ref done, command);
+            ItemCombine(currentitems, result, 0, prog, ref done, command);
         }
         static void ItemCombine(List<string> items, List<string> result, int start, IntCode prog, ref bool done, string maincommand)
         {
@@ -143,7 +132,7 @@ namespace D25
             {
                 current.visited = true;
                 List<string> outs = prog.OutputASCII();
-                Analyze(outs, out bool CanMove);
+                Analyze(outs);
                 if (!nodes.Where(x => !x.visited).Any())
                     break;
                 MoveTo(nodes.First(x => !x.visited), prog);
@@ -196,13 +185,11 @@ namespace D25
                 }
             }
         }
-        static void Analyze(List<string> outs, out bool CanMove)
+        static void Analyze(List<string> outs)
         {
-            CanMove = false;
             current.Name = outs[0];
             if(current.Name == "== Security Checkpoint ==")
             {
-                CanMove = true;
                 current.IsSecurityCheckpoint = true;
                 return;
             }
@@ -210,7 +197,6 @@ namespace D25
             {
                 if (outs[i] == "Doors here lead:")
                 {
-                    CanMove = true;
                     while (i + 1 < outs.Count && outs[i + 1].Contains("-"))
                     {
                         i++;
@@ -248,7 +234,6 @@ namespace D25
                 }
                 if (outs[i] == "Items here:")
                 {
-                    CanMove = true;
                     while (i + 1 < outs.Count && outs[i + 1].Contains('-'))
                     {
                         i++;
@@ -256,10 +241,6 @@ namespace D25
                             continue;
                         current.items.Add(outs[i].Replace("-","").Trim());
                     }
-                }
-                if (outs[i] == "Command?")
-                {
-                    CanMove = true;
                 }
             }             
 
